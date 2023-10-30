@@ -10,6 +10,7 @@ const form = document.getElementById("formu")
 const errorMessage = document.getElementById("errorMessage")
 
 
+
 const products = [
     {nome: "IPhone X 64Gb Grey", preco: 999.0, quantidade: 1},
     {nome: "Samsung S8 black", preco: 999.0, quantidade: 1}
@@ -23,13 +24,24 @@ function formatDataToString(value) {
     return valorFormatado;
 }
 
-function handleDelete(id){
-  alert(id)
+function handleEdit(id){
+  const product = products[id]
+  productName.value = product.nome
+  productValue.value = product.preco
+  productQuantity.value = product.quantidade
+
+  form.dataset.productId = id
+
+  openModal()
+}
+function handleDelete(id) {
+  if (id !== undefined) {
+    products.splice(id, 1)
+    renderDataTable()
+    closeModal()
+  }
 }
 
-function handleEdit(id){
-  alert(id)
-}
 
 function criaModelo(nome, preco, quantidade, total, id) {
     const resultHtml =  (tableData.innerHTML += `
@@ -78,12 +90,29 @@ function renderDataTable() {
     errorMessage.classList.add("hidden")
   }
   function addProduct() {
-    if(productName.value && productQuantity.value && productValue.value) {
-      products.push({nome: productName.value, preco: productValue.value, quantidade:productQuantity.value})
+    const id = form.dataset.productId
+
+    if (productName.value && productQuantity.value && productValue.value) {
+      if (id !== undefined) {        
+        products[id] = {
+          nome: productName.value,
+          preco: productValue.value,
+          quantidade: productQuantity.value,
+        }
+      } else {        
+        products.push({
+          nome: productName.value,
+          preco: productValue.value,
+          quantidade: productQuantity.value,
+        })
+      }
+  
+      renderDataTable()
       closeModal()
     }else {
       showErrorMessage()
     }
+    form.dataset.productId = ''
   }
 
   renderDataTable()
