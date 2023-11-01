@@ -8,7 +8,15 @@ const productQuantity = document.getElementById("productQuantity")
 const btnSend = document.getElementById("send")
 const form = document.getElementById("formu")
 const errorMessage = document.getElementById("errorMessage")
+const modal2 = document.getElementById("modal2")
+const productName2 = document.getElementById("productNameChange")
+const productValue2 = document.getElementById("productValueChange")
+const productQuantity2 = document.getElementById("productQuantityChange")
+const btnChange = document.getElementById("change")
+const formChange = document.getElementById("formula")
+const btnCancelChange = document.getElementById("cancelChange")
 
+let editingProductIndex = -1
 
 const products = [
     {nome: "IPhone X 64Gb Grey", preco: 999.0, quantidade: 1},
@@ -20,7 +28,7 @@ function formatDataToString(value) {
       style: "currency",
       currency: "BRL",
     }) 
-    return valorFormatado;
+    return valorFormatado
 }
 
 function handleDelete(id) {
@@ -28,8 +36,13 @@ function handleDelete(id) {
   renderDataTable()
 }
 
-function handleEdit(id){
-  
+function handleEdit(id) {
+  editingProductIndex = id
+  const product = products[id]
+  productName2.value = product.nome
+  productValue2.value = product.preco
+  productQuantity2.value = product.quantidade
+  openModal2()
 }
 
 function criaModelo(nome, preco, quantidade, total, id) {
@@ -58,9 +71,38 @@ function renderDataTable() {
     })
   }  
 
+  function btnChangeProduct(e) {
+    e.preventDefault()
+    const newName = productName2.value
+    const newValue = productValue2.value
+    const newQuantity = productQuantity2.value
+  
+    if (newName && newValue && newQuantity) {
+      const editedProduct = {
+        nome: newName,
+        preco: newValue,
+        quantidade: newQuantity,
+      }
+  
+      if (editingProductIndex !== -1) {
+        products[editingProductIndex] = editedProduct
+      }
+  
+      closeModal2()
+      renderDataTable()
+      editingProductIndex = -1
+    } else {
+      showErrorMessage()
+    }
+  }
+
   function openModal() {
     modal.classList.remove("hidden")
     modal.classList.add("flex")
+  }
+  function openModal2() {
+    modal2.classList.remove("hidden")
+    modal2.classList.add("flex")
   }
   
   function closeModal() {
@@ -69,6 +111,13 @@ function renderDataTable() {
     hiddenErrorMessage()
     form.reset()
   }
+  function closeModal2() {
+    modal2.classList.remove("flex")
+    modal2.classList.add("hidden")
+    hiddenErrorMessage()
+    formChange.reset()
+  }
+  
 
   function showErrorMessage(){
     errorMessage.classList.remove("hidden")
@@ -90,6 +139,8 @@ function renderDataTable() {
   renderDataTable()
 
   buttonAdd.addEventListener("click", openModal)
+
+  btnChange.addEventListener("click", btnChangeProduct)
   
   buttonCancel.addEventListener("click", (e) => {
     e.preventDefault()    
@@ -102,8 +153,14 @@ function renderDataTable() {
     renderDataTable()    
   })
 
+  btnCancelChange.addEventListener("click", (e) => {
+    e.preventDefault()
+    closeModal2()
+    editingProductIndex = -1
+  })
+
   /*
   *TAREFA*
-  - pegar o valor dos nomes, preços e quantidade e fazer a ediçao e deletar  
+  - pegar o valor dos nomes, preços e quantidade e fazer a ediçao 
   
   */
