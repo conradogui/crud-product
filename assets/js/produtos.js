@@ -84,7 +84,7 @@ function renderDataTable() {
         quantidade: newQuantity,
       }
   
-      if (editingProductIndex !== -1) {
+      if (editingProductIndex !== -1) { // ou seja, o produto está sendo editado
         products[editingProductIndex] = editedProduct
       }
   
@@ -159,8 +159,4 @@ function renderDataTable() {
     editingProductIndex = -1
   })
 
-  /*
-  *TAREFA*
-  - pegar o valor dos nomes, preços e quantidade e fazer a ediçao 
   
-  */
